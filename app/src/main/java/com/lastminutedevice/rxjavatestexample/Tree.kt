@@ -1,5 +1,7 @@
 package com.lastminutedevice.rxjavatestexample
 
+import java.lang.RuntimeException
+
 class Tree {
 
     fun happyState() {
@@ -7,6 +9,6 @@ class Tree {
     }
 
     fun errorState(message: String?) {
-        println(message)
+        throw RuntimeException(message)
     }
 }

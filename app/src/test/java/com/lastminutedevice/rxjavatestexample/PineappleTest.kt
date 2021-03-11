@@ -3,7 +3,7 @@ package com.lastminutedevice.rxjavatestexample
 import org.junit.Assert
 import org.junit.Test
 
-class OrangesTest {
+class PineappleTest {
 
     @Test
     fun test() {

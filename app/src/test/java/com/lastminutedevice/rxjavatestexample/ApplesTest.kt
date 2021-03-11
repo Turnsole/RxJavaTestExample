@@ -1,6 +1,7 @@
 package com.lastminutedevice.rxjavatestexample
 
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
@@ -15,7 +16,9 @@ class ApplesTest {
 
     private var apples : Apples? = null
 
-    private val testSchedulers = object : SchedulerProvider {
+    private val errorString = "Hard-Coded Exception"
+
+    private val testSchedulers : SchedulerProvider = object : SchedulerProvider {
         override fun background(): Scheduler {
             return Schedulers.trampoline()
         }
@@ -28,9 +31,12 @@ class ApplesTest {
     @Mock
     private lateinit var mockTree : Tree
 
+    @Mock
+    lateinit var mockDataSource : SimpleDataSource
+
     @Before
     fun setup() {
-        apples = Apples(mockTree, testSchedulers)
+        apples = Apples(mockTree, testSchedulers, mockDataSource)
         apples?.beginLifecycle()
     }
 
@@ -41,7 +47,8 @@ class ApplesTest {
 
     @Test
     fun test() {
+        Mockito.`when`(mockDataSource.stream()).thenReturn(Single.error<Boolean>(Throwable(errorString)))
         apples?.doSomething()
-        Mockito.verify(mockTree).errorState("This should trigger onError in Apples.")
+        Mockito.verify(mockTree).errorState(errorString)
     }
 }
