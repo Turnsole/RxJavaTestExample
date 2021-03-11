@@ -2,9 +2,8 @@ package com.lastminutedevice.rxjavatestexample
 
 import com.uber.autodispose.AutoDispose
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 
-class Apples(private val tree: Tree) {
+class Apples(private val tree: Tree, private val schedulers: SchedulerProvider) {
 
     private val lifecycleScopeProvider = SimpleLifecycleScopeProvider()
 
@@ -18,13 +17,13 @@ class Apples(private val tree: Tree) {
 
     fun doSomething() {
         Single.just(true)
-            .subscribeOn(Schedulers.trampoline())
-            .observeOn(Schedulers.trampoline())
+            .subscribeOn(schedulers.background())
+            .observeOn(schedulers.ui())
             .map { throw Throwable("This should trigger onError in Apples.") }
             .`as`(AutoDispose.autoDisposable(lifecycleScopeProvider))
             .subscribe (
                 { tree.happyState() }, // onSuccess
-                { tree.errorState() }  // onError
+                { throwable -> tree.errorState(throwable.message) }  // onError
             )
     }
 }

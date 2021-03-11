@@ -6,7 +6,7 @@ class Tree {
         /* No-op. */
     }
 
-    fun errorState() {
-        /* No-op. */
+    fun errorState(message: String?) {
+        println(message)
     }
 }
