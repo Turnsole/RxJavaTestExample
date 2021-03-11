@@ -31,6 +31,6 @@ class ApplesTest {
     fun test() {
         apples?.doSomething()
 
-        Mockito.verify(mockTree.errorState())
+        Mockito.verify(mockTree).errorState()
     }
 }
